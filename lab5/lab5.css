@@ -1,0 +1,109 @@
+html{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    margin-top: 0px;
+    height: 100%;
+    background: url("bg4.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size:cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: #555;
+    color: #555;
+}
+
+.tabs { width: 100%; padding: 0px; margin: 0 auto; }
+.tabs>input { display: none; margin: 0px;padding: 0px;}
+.tabs>div {
+    display: none;
+    padding: 0;
+    border: 1px solid #C0C0C0;
+    background: #555;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+}
+.tg {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-color: #555;
+    margin: 0px 0;
+}
+.tg th {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 10px 5px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    word-break: normal;
+    border-color: #555;
+    background-color: rgb(7, 133, 165);
+    color: #000000;
+}
+.tg td {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 10px 5px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    word-break: normal;
+    border-color: #555;
+    background-color: rgb(117, 172, 223);
+    color: #000000;
+}
+table {
+    display: table;
+    background-color: transparent;
+}
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+.table-wrap {
+    display: inline-block;
+}
+
+.tabs>label {
+    display: inline-block;
+    padding: 7px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    color: #666666;
+    border: 1px solid #C0C0C0;
+    background: #E0E0E0;
+    cursor: pointer;
+}
+.tabs>input:checked + label {
+    color: #000000;
+    border: 1px solid #C0C0C0;
+    border-bottom: 1px solid #FFFFFF;
+    background: #FFFFFF;
+}
+a .error{
+    
+    display: inline-block;
+    padding: 7px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    color: #666666;
+    border: 1px solid #C0C0C0;
+    background: #E0E0E0;
+    cursor: pointer;
+
+}
+div[hidden] {
+    display: none;
+  }

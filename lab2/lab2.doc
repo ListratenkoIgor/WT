@@ -1,0 +1,184 @@
+﻿Министерство образования Республики Беларусь
+Учреждение образования
+БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ ИНФОРМАТИКИ И РАДИОЭЛЕКТРОНИКИ
+Факультет компьютерных систем и сетей
+Кафедра программного обеспечения информационных технологий
+
+Отчет по лабораторной работе №2
+по предмету
+Веб-технологии 
+на тему:
+Основы PHP,  операции с массивами, строками, формы,  GET- и POST-запросы
+
+
+
+		Выполнил:
+Студент гр. 851001 
+Листратенко И.В.
+Проверил: 
+Аврамец Д.В.
+
+
+
+
+Минск 2020
+1. Вариант №4
+Создайте 2 массива с целыми числами через 2 поля формы, объедините два массива в один (не используя специальные функции PHP типа array_merge(arr1,arr2)!), Выведите все чётные числа из получившегося массива.
+2. Используемые типы данных
+• Строки
+Входные и выходные данные представлены строками, для удобства валидации ввода и вывода.
+• Массивы
+Используются для хранения и обработки данных. 
+• Целочисленный тип (integer)
+Используется для констант, индексации массивов и некоторых математических операций.
+3. Краткий алгоритм решения
+     (Здесь и далее звёздочками и курсивным шрифтом будут выделятся примечания и комментарии автора)*
+     Данные отправляются POST-запросом представленным индексированным массивом строк. Далее строки по очереди проходят валидацию через парсер. Если валидация пройдена строка разбивается в массив чисел, который добавляется в массив массивов. Далее в цикле перебираются все массивы**  начиная со второго. Все данные из этих массивов по очереди присоединяются к первому массиву, который и будет хранить в себе результат слияния N массивов. В конце элементы проходят проверку чётности делением по модулю 2 и добавляются в выходную строку.    
+     **Для данного задания было написано общее решение и оно будет работать для любого количества массивов.
+ 4. Как проверялась корректность вводимых данных
+     Строки полученные из POST-запроса по очереди проходят валидацию через парсер. Парсер представляет собой конечный автомат с шестью состояниями, принимающий на вход строку и обрабатывающий её посимвольно. Для прохождения валидации строка должна иметь вид “{знак}число {‘запятая’ {знак}число}* ”  с любым кл-вом пробелов, не разбивающих одно число на два.
+     *{…} – необязательная часть
+     И если проверки всех строк завершились удачно, идёт преобразование строки в массивы для обработки.
+
+
+5. Код программы
+*Особенность копирования из Visual Studio Code
+<?php
+const INPUT_COUNT = 2;
+?>
+
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+
+<head>
+    <title>Lab_2</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="lab2.css">
+    <meta name="variant" content="4">
+    <meta name="description" content="Создайте 2 массива с целыми числами через 	2 поля формы, объедините два массива в один (не используя специальные 	функции PHP типа array_merge(arr1,arr2)!), Выведите все чётные числа из 	получившегося массива.">
+
+</head>
+
+<body>
+     <!--- 
+     html form with dinamic input create
+     number of inputs depend of INPUT_COUNT value
+     --->
+    <form class="" action="lab2.php" method="post">
+        <?php
+        $present_post = isset($_POST['values']);
+        for ($i = 0; $i < INPUT_COUNT; $i++) {
+            echo '<span class="intro-text"> <a>Массив_' . ($i + 1) . '</a> 				</span>';
+            echo '<input class="input-field" type="text" name="values[] "';
+            if ($present_post) {
+                echo 'value="'  . $_POST['values'][$i] .  '"';
+            }
+            echo "><br>";
+        }
+        ?>
+
+        <button class="button-submit" type="submit" name="btn"> Submit</button>
+
+    </form>
+
+    <p>
+        <?php
+        //function to output 1-dimensional array
+        function printArray($arr)
+        {   
+            //collapse array to string and output it
+            echo '<br>' . implode(", ", $arr);
+        }
+        //function that output even numbers from 1-dimensional array
+        function printEvenArray($arr)
+        {
+            $output_str = "";
+            //enumeration numbers in array
+            foreach ($arr as $val) {
+                //parity check
+                if ($val % 2 == 0) {
+                    $output_str .= ", $val";
+                }
+            }
+            //output
+            if (empty($output_str)) {
+                echo '<br>' . "Результирующий массив не содержит чётных чисел";
+            } else {
+                echo '<br>' . 'Чётные элементы:';
+                $output_str = trim($output_str, " ,");
+                echo '<br>' . $output_str;
+            }
+        }
+        //function to validate input
+        function checkInput($string): bool
+        {
+
+ /*it is parser that have 6 states: stError, stBegin, stNumber, stDelimiter,
+stSign, stSpace 
+ trim is used to avoid spaces at the begin and the end of string*/
+            $string = trim($string);
+            //array of parser states
+            $states = array([0, 0, 0, 0, 0, 0], [0, 0, 2, 0, 4, 1],
+                             [0, 0, 2, 3, 0, 5], [0, 0, 2, 0, 4, 3], 
+                             [0, 0, 2, 0, 0, 0], [0, 0, 0, 3, 0, 5]);
+            //start state
+            $now = 1;
+            for ($i = 0, $j = strlen($string); $i < $j; $i++) {
+                switch (true) {
+                    //check digit
+                    case (($string[$i] >= '0') && ($string[$i] <= '9')):
+                        $now = $states[$now][2];
+                        break;
+                    //check delimiter
+                    case $string[$i] == ',':
+                        $now = $states[$now][3];
+                        break;
+                    //check sing
+                    case ($string[$i] == '-'):                 
+                        $now = $states[$now][4];
+                        break;
+                    //check space
+                    case ($string[$i] == ' '):
+                        $now = $states[$now][5];
+                        break;
+                    //other chars
+                    default:
+                        $now = $states[$now][0];
+                }
+            }
+            //end state should be a number(2)
+            return  $now == 2;
+        }
+
+        if ($present_post) {
+            //$arrays[array of array] is array for storage arrays,gets from POST 
+            $arrays = array();
+            //validate data from input`s
+            for ($i = 0; $i < INPUT_COUNT; $i++) {
+                if (!checkInput($_POST['values'][$i])) {
+                    echo "Ошибка ввода в массиве №" . ($i + 1) . ".
+                    Пожалуйста вводите массив в формате \"число,число...\"
+                    " . '<br>';
+                    exit;
+                } else {
+                    //delete ' ' from string and get array from string 
+                    $arrays[$i] = str_getcsv(str_replace(' ', '', $_POST['values'][$i]), ",");
+                }
+            }
+            //merge all arrays (copy values) to first array (to array[0])
+            for ($i = 1; $i < INPUT_COUNT; $i++) {
+                foreach ($arrays[$i] as $value) {
+                    $arrays[0][] = $value;
+                }
+            }
+            //output result
+            echo 'Объединённый массив:';
+            printArray($arrays[0]);
+            printEvenArray($arrays[0]);
+        }
+        ?>
+    </p>
+</body>
+
+</html>
+
