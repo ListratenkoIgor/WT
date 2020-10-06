@@ -1,0 +1,88 @@
+/*Добавляем поля*/
+
+body{    background: url("bg4.jpg") no-repeat center center fixed;}
+.faq-section{
+    margin: 40px 0;
+}
+
+/*Скрываем чекбоксы и абзацы*/
+.faq-section input,
+.faq-section p{
+    display: none;
+}
+ul{
+    list-style-type: none;
+}
+/*Показываем только обрезанное введение */
+.faq-section label{
+    display: block;
+    color: rgb(255, 0, 0);
+    font-size: 20px;
+    transition: all .15s ease-out;
+    /* Clipping text */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/*Если чекбокс отмечен, показываем все абазацы*/
+.faq-section input[type=checkbox]:checked~p{
+    display: block;
+    color: #444;
+    font-size: 20px;
+    /* Восстанавливаем обрезание по умолчаниюы */
+    text-overflow: clip;
+    white-space: normal;
+    overflow: visible;
+}
+
+/*Стили для метки*/
+.faq-section label{
+    font-size: 20px;
+    cursor: pointer;
+    background: #333;
+    display: block;
+    position: relative;
+    padding: 7px 10px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    border-left: 3px solid #888;
+    /* text-shadow: 0 1px 0 rgba(255,255,255,.5); */
+    transition: all .15s ease-out;
+}
+
+/*Удаляем выделение текста при переключении*/
+.faq-section label::selection{
+    background: #000;
+}
+
+.faq-section label:hover{
+    background: #000;
+}
+
+/*Если чекбокс отмечен, устанавливаем стили соответственно*/
+.faq-section input[type=checkbox]:checked~label{
+    border-color: red;
+    background: #333;
+    /* background-image: linear-gradient(to bottom, #fff, #f5deb4); */
+    box-shadow: 0 0 1px rgba(0,0,0,.4);
+}
+
+/*Стрелка метки - состояние по умолчанию*/
+.faq-section label::before{
+    content: '';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    margin-top: -6px;
+    border: 6px solid transparent;
+    border-left-color: inherit;
+}
+
+/*Обновляем стрелку справа*/
+.faq-section input[type=checkbox]:checked~label::before{
+    border: 6px solid transparent;
+    border-top-color: inherit;
+    margin-top: -3px;
+    right: 10px;
+}
